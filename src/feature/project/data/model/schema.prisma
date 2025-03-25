@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String   @db.ObjectId
+  owner       User     @relation(fields: [ownerId], references: [id])
+  memberIds   String[] @db.ObjectId
+  members     User[]   @relation(fields: [memberIds], references: [id])
+  columnIds   String[] @db.ObjectId
+  columns     Column[] @relation(fields: [columnIds], references: [id])
+  privacy     String   @default("private")
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  // другие поля
+  projects  Project[]
+  memberOf  Project[] @relation("members")
+}
+
+model Column {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  // другие поля
+  project   Project   @relation(fields: [projectId], references: [id])
+  projectId String    @db.ObjectId
+}
