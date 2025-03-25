@@ -1,15 +1,18 @@
-import { Elysia, NotFoundError } from "elysia";
-import { ProjectModel } from "../data/model/project_schema";
+import { Elysia, t } from "elysia";
+import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
+import { ProjectRepository } from "../domain/repository/project_repository";
 
-export const DeleteProjectController = new Elysia().delete(
-  "/project/:id",
-  async ({params}) => {
+export const DeleteProjectController = new Elysia().use(DIContainerPlugin).get(
+  "/delete/:id",
+  async ({ container, params }) => {
     const { id } = params;
-    const project = await ProjectModel.findByIdAndDelete(id);
-    if (!project) throw new NotFoundError("Project not found");
-    return { message: "Project deleted successfully" };
+    const projectRepository = container.get(ProjectRepository);
+    const deletedProject = await projectRepository.Project(id);
+    return deletedProject;
   },
   {
-    detail: { description: "Удаление проекта по его id" },
+    params: t.Object({
+      id: t.String(),
+    }),
   }
 );

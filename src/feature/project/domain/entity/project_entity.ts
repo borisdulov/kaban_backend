@@ -7,7 +7,7 @@ export interface Project {
     description: string;
     createdAt: Date;
     updatedAt: Date;
-    owner: string;
-    members: string[];
+    owner: User;
+    members: User[];
     privacy: ProjectPrivacy;
 }

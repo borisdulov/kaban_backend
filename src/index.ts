@@ -17,6 +17,9 @@ try {
 }
 
 const app = new Elysia()
+  .onError(({ error, code }) => {
+    console.error(`Код ошибки: ${code}\n`, error);
+  })
   .use(swagger())
   .use(AuthGroup)
   .use(ProjectGroup)

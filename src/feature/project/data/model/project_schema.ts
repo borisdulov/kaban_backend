@@ -2,6 +2,8 @@ import mongoose, { Schema, SchemaType, model } from "mongoose";
 import { ProjectPrivacy } from "../../domain/entity/project_privacy_enum";
 import { Project } from "../../domain/entity/project_entity";
 
+export const projectSchemaTitle = "Project";
+
 const projectSchema = new Schema<Project>({
     name: {
         type: String,
@@ -11,11 +13,13 @@ const projectSchema = new Schema<Project>({
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
     owner: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     members: [{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     }],
     privacy: {
@@ -27,4 +31,4 @@ const projectSchema = new Schema<Project>({
     timestamps: true
 })
 
-export const ProjectModel = mongoose.model('Project', projectSchema);
+export const ProjectModel = mongoose.model(projectSchemaTitle, projectSchema);

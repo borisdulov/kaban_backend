@@ -1,16 +1,18 @@
-import { Elysia, NotFoundError } from "elysia";
-import { ProjectModel } from "../data/model/project_schema";
-import { ProjectResponseValidation } from "../dto/response/project_response";
+import { Elysia, t } from "elysia";
+import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
+import { ProjectRepository } from "../domain/repository/project_repository";
 
-export const GetProjectByIdController = new Elysia().get(
-    "/project/:id",
-    async({params}) => {
-        const { id } = params;
-        const project = await ProjectModel.findById(id);
-        if (!project) throw new NotFoundError("Project not found");
-        return ProjectResponseValidation.parse(project.toObject());
-    },
-    {
-        detail: { description: "Получить проект по его id" },
-    }
+export const GetProjectByIdController = new Elysia().use(DIContainerPlugin).get(
+  "/getProject/:id",
+  async ({ params, container }) => {
+    const { id } = params;
+    const projectRepository = container.get(ProjectRepository);
+    const project = await projectRepository.getProjectById(id);
+    return project;
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
+  }
 );

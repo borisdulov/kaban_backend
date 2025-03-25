@@ -1,16 +1,16 @@
 import { Elysia } from "elysia";
-import { CreateProjectValidation } from "../dto/request/create_project_request";
 import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
-import { CreateProjectRepositoryImp } from "../data/repository/create_project_repository_imp";
+import { ProjectRepository } from "../domain/repository/project_repository";
+import { CreateProjectValidation } from "../dto/request/create_project_dto";
 
 export const CreateProjectController = new Elysia().use(DIContainerPlugin).post(
   "/create",
-  async ({container, body}) => {
-    const createProjectRepositoryImp = container.get(CreateProjectRepositoryImp)
-    const createdProject = await createProjectRepositoryImp.createProject(body);
+  async ({ container, body }) => {
+    const projectRepository = container.get(ProjectRepository);
+    const createdProject = await projectRepository.createProject(body);
     return createdProject;
   },
   {
-    body: CreateProjectValidation
-  },
+    body: CreateProjectValidation,
+  }
 );
