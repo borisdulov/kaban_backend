@@ -6,12 +6,12 @@ import { UserRepository } from "../domain/repository/user_repository";
 export const GetMeController = new Elysia().use(DIContainerPlugin).get(
   "/",
   async ({ container }) => {
-    const userRepository = container.get(UserRepository);
-    userRepository.createUser();
+    // const userRepository = container.get(UserRepository);
+    // userRepository.createUser();
 
-    const newUser = new User({ name: "asdf", email: "asdfsdf" });
-
-    await newUser.save();
+    // const newUser = new User({ name: "asdf", email: "asdfsdf" });
+//
+    // await newUser.save();
     return "Jopa zalupa";
   },
   {
