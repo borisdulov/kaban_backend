@@ -7,6 +7,15 @@ import { ProjectModel } from "../model/project_schema";
 import { AppError } from "../../../../core/error/app_error";
 
 export class ProjectRepositoryImpl extends ProjectRepository {
+  addUserToProject(userId: string, projectId: string): Promise<Project> {
+    throw new Error("Method not implemented.");
+  }
+  getMyProject(userId: string, projectId: string): Promise<Project> {
+    throw new Error("Method not implemented.");
+  }
+  removeUserFromProject(userId: string, projectId: string): Promise<Project> {
+    throw new Error("Method not implemented.");
+  }
   async createProject(data: CreateProjectDTO): Promise<Project> {
     const project = new ProjectModel({
       ...data,
