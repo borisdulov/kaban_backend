@@ -1,13 +1,14 @@
 import { Schema, model } from "mongoose";
+import { User } from "../../domain/entity/user_entity";
 //
-const UserSchema = new Schema({
+const UserSchema = new Schema<User>({
   name: { type: String, required: true },
   email: { type: String, unique: true },
-  login: {type: String, unique: true},
-  username: {type: String, unique: true},
-  bio: {type: String},
-  avatar: {type: String},
-  projectsIds: [{type: String}]
+  login: { type: String, unique: true },
+  username: { type: String, unique: true },
+  bio: { type: String },
+  avatar: { type: String },
+  projectsIds: [{ type: String }],
 });
 
-export const User = model("User", UserSchema);
+export const UserModel = model("User", UserSchema);

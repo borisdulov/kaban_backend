@@ -6,4 +6,5 @@ export enum AppError {
   UNAUTHORIZED = "UNAUTHORIZED",
   FORBIDDEN = "FORBIDDEN",
   PROJECT_NOT_FOUND = "Project not found",
+  USER_NOT_FOUND = "User not found",
 }
