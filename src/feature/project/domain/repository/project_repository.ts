@@ -8,18 +8,19 @@ export abstract class ProjectRepository extends Dependency {
 
   abstract Project(projectId: string): Promise<Project>;
 
-  abstract updateProject(data: UpdateProjectDTO): Promise<Project>;
+  abstract updateProject(
+    projectId: string,
+    data: UpdateProjectDTO
+  ): Promise<Project>;
 
   abstract getProjectById(projectId: string): Promise<Project>;
-
-  abstract getProjectsByUserId(userId: string): Promise<Project>;
 
   abstract addUserToProject(
     userId: string,
     projectId: string
   ): Promise<Project>;
 
-  abstract getMyProject(userId: string, projectId: string): Promise<Project>;
+  abstract getMyProject(userId: string): Promise<Project[]>;
 
   abstract removeUserFromProject(
     userId: string,

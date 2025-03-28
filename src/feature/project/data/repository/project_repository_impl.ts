@@ -27,21 +27,60 @@ export class ProjectRepositoryImpl extends ProjectRepository {
         { new: true }
       ).lean(),
     ]);
-    const updatedProject = await ProjectModel.findById(projectId)
-      .populate("members") // Убедитесь, что в схеме ProjectModel указан ref для members
-      .lean();
+    const updatedProject = await ProjectModel.findById(projectId).populate(
+      "members"
+    );
     if (!updatedProject) {
-      throw new Error("Project not found after update"); // Handle the error appropriately
+      throw AppError.PROJECT_NOT_FOUND;
     }
     return updatedProject;
   }
 
-  getMyProject(userId: string, projectId: string): Promise<Project> {
-    throw new Error("Method not implemented.");
+  async getMyProject(userId: string): Promise<Project[]> {
+    const user = await UserModel.findById(userId);
+    if (!user) throw AppError.USER_NOT_FOUND;
+
+    const projects = await ProjectModel.find({
+      _id: { $in: user.projectsIds },
+    })
+      .populate("owner")
+      .populate("members");
+
+    return projects as Project[];
   }
-  removeUserFromProject(userId: string, projectId: string): Promise<Project> {
-    throw new Error("Method not implemented.");
+
+  async removeUserFromProject(
+    userId: string,
+    projectId: string
+  ): Promise<Project> {
+    const project = await ProjectModel.findById(projectId);
+    if (!project) throw AppError.PROJECT_NOT_FOUND;
+
+    const user = await UserModel.findById(userId);
+    if (!user) throw AppError.USER_NOT_FOUND;
+
+    await Promise.all([
+      ProjectModel.findByIdAndUpdate(
+        projectId,
+        { $pull: { members: userId } },
+        { new: true }
+      ).lean(),
+      UserModel.findByIdAndUpdate(
+        userId,
+        { $pull: { projectsIds: projectId } },
+        { new: true }
+      ).lean(),
+    ]);
+
+    const updatedProject = await ProjectModel.findById(projectId).populate(
+      "members"
+    );
+    if (!updatedProject) {
+      throw AppError.PROJECT_NOT_FOUND;
+    }
+    return updatedProject;
   }
+
   async createProject(data: CreateProjectDTO): Promise<Project> {
     const project = new ProjectModel({
       ...data,
@@ -65,11 +104,18 @@ export class ProjectRepositoryImpl extends ProjectRepository {
     return project.toObject();
   }
 
-  updateProject(data: UpdateProjectDTO): Promise<Project> {
-    throw new Error("Method not implemented.");
-  }
+  async updateProject(
+    projectId: string,
+    updateProjectDTO: UpdateProjectDTO
+  ): Promise<Project> {
+    const project = await ProjectModel.findOneAndUpdate(
+      { _id: projectId },
+      { $set: updateProjectDTO },
+      { new: true, runValidators: true }
+    ).lean();
 
-  getProjectsByUserId(userId: string): Promise<Project> {
-    throw new Error("Method not implemented.");
+    if (!project) throw AppError.PROJECT_NOT_FOUND;
+
+    return project;
   }
 }

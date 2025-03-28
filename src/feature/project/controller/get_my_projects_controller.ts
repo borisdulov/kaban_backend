@@ -1,11 +1,18 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
+import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
+import { ProjectRepository } from "../domain/repository/project_repository";
 
-export const GetMyProjectsController = new Elysia().get(
-  "/",
-  async (request) => {},
+export const GetMyProjectsController = new Elysia().use(DIContainerPlugin).get(
+  "/my-projects/:userId",
+  async ({ container, params }) => {
+    const { userId } = params;
+    const projectRepository = container.get(ProjectRepository);
+    const projects = await projectRepository.getMyProject(userId);
+    return projects;
+  },
   {
-    detail: {
-      description: "Получение пользователем проектов, в которых он состоит",
-    },
+    params: t.Object({
+      userId: t.String(),
+    }),
   }
 );

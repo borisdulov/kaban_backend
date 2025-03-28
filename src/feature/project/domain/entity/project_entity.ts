@@ -11,4 +11,5 @@ export interface Project {
   owner: User;
   members: Types.ObjectId[] | User[];
   privacy: ProjectPrivacy;
+  __v?: number;
 }
