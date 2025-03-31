@@ -1,5 +1,5 @@
 import { Static, t } from "elysia";
-import { ProjectPrivacy } from "../../domain/entity/project_privacy_enum";
+import { ProjectPrivacy } from "../../domain/entity/board_privacy";
 
 export const CreateProjectValidation = t.Object({
   name: t.String(),

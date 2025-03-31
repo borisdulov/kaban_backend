@@ -1,18 +1,15 @@
 import { Elysia, t } from "elysia";
 import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
-import { ProjectRepository } from "../domain/repository/project_repository";
+import { BoardRepository } from "../domain/repository/board_repository";
 
-export const RemoveUserFromProjectController = new Elysia()
+export const AddUsersToProjectController = new Elysia()
   .use(DIContainerPlugin)
   .post(
-    "/remove",
+    "/add",
     async ({ container, body }) => {
       const { userId, projectId } = body;
-      const projectRepository = container.get(ProjectRepository);
-      const updatedProject = await projectRepository.removeUserFromProject(
-        userId,
-        projectId
-      );
+      const projectRepository = container.get(BoardRepository);
+      const updatedProject = await projectRepository.addUser(userId, projectId);
       return updatedProject;
     },
     {

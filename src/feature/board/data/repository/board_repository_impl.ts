@@ -1,24 +1,28 @@
 import mongoose from "mongoose";
-import { Project } from "../../domain/entity/project_entity";
-import { ProjectRepository } from "../../domain/repository/project_repository";
+import { Board } from "../../domain/entity/board_entity";
+import { BoardRepository as BoardRepository } from "../../domain/repository/board_repository";
 import { CreateProjectDTO } from "../../dto/request/create_project_dto";
 import { UpdateProjectDTO } from "../../dto/request/update_project_dto";
-import { ProjectModel } from "../model/project_schema";
+import { BoardModel } from "../model/board_schema";
 import { AppError } from "../../../../core/error/app_error";
 import { UserModel } from "../../../user/data/model/user_model";
 
-export class ProjectRepositoryImpl extends ProjectRepository {
-  async addUserToProject(userId: string, projectId: string): Promise<Project> {
-    const project = await ProjectModel.findById(projectId);
+export class BoardRepositoryImpl extends BoardRepository {
+  deleteBoard(boardId: string): Promise<Board> {
+    throw new Error("Method not implemented.");
+  }
+
+  async addUser(userId: string, projectId: string): Promise<Board> {
+    const project = await BoardModel.findById(projectId);
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
     await Promise.all([
-      ProjectModel.findByIdAndUpdate(
+      BoardModel.findByIdAndUpdate(
         projectId,
-        { $addToSet: { members: userId } },
+        { $addToSet: { users: userId } },
         { new: true }
       ).lean(),
       UserModel.findByIdAndUpdate(
@@ -27,7 +31,7 @@ export class ProjectRepositoryImpl extends ProjectRepository {
         { new: true }
       ).lean(),
     ]);
-    const updatedProject = await ProjectModel.findById(projectId).populate(
+    const updatedProject = await BoardModel.findById(projectId).populate(
       "members"
     );
     if (!updatedProject) {
@@ -36,33 +40,30 @@ export class ProjectRepositoryImpl extends ProjectRepository {
     return updatedProject;
   }
 
-  async getMyProject(userId: string): Promise<Project[]> {
+  async getMyBoards(userId: string): Promise<Board[]> {
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
-    const projects = await ProjectModel.find({
+    const projects = await BoardModel.find({
       _id: { $in: user.projectsIds },
     })
       .populate("owner")
       .populate("members");
 
-    return projects as Project[];
+    return projects as Board[];
   }
 
-  async removeUserFromProject(
-    userId: string,
-    projectId: string
-  ): Promise<Project> {
-    const project = await ProjectModel.findById(projectId);
+  async removeUser(userId: string, projectId: string): Promise<Board> {
+    const project = await BoardModel.findById(projectId);
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
     await Promise.all([
-      ProjectModel.findByIdAndUpdate(
+      BoardModel.findByIdAndUpdate(
         projectId,
-        { $pull: { members: userId } },
+        { $pull: { users: userId } },
         { new: true }
       ).lean(),
       UserModel.findByIdAndUpdate(
@@ -72,7 +73,7 @@ export class ProjectRepositoryImpl extends ProjectRepository {
       ).lean(),
     ]);
 
-    const updatedProject = await ProjectModel.findById(projectId).populate(
+    const updatedProject = await BoardModel.findById(projectId).populate(
       "members"
     );
     if (!updatedProject) {
@@ -81,8 +82,8 @@ export class ProjectRepositoryImpl extends ProjectRepository {
     return updatedProject;
   }
 
-  async createProject(data: CreateProjectDTO): Promise<Project> {
-    const project = new ProjectModel({
+  async createBoard(data: CreateProjectDTO): Promise<Board> {
+    const project = new BoardModel({
       ...data,
       owner: new mongoose.Types.ObjectId(),
     });
@@ -90,25 +91,25 @@ export class ProjectRepositoryImpl extends ProjectRepository {
     return project.toObject();
   }
 
-  async Project(projectId: string): Promise<Project> {
-    const project = await ProjectModel.findByIdAndDelete(projectId).exec();
+  async Project(projectId: string): Promise<Board> {
+    const project = await BoardModel.findByIdAndDelete(projectId).exec();
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
     return project.toObject();
   }
 
-  async getProjectById(projectId: string): Promise<Project> {
-    const project = await ProjectModel.findById(projectId).exec();
+  async getBoard(projectId: string): Promise<Board> {
+    const project = await BoardModel.findById(projectId).exec();
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
     return project.toObject();
   }
 
-  async updateProject(
+  async updateBoard(
     projectId: string,
     updateProjectDTO: UpdateProjectDTO
-  ): Promise<Project> {
-    const project = await ProjectModel.findOneAndUpdate(
+  ): Promise<Board> {
+    const project = await BoardModel.findOneAndUpdate(
       { _id: projectId },
       { $set: updateProjectDTO },
       { new: true, runValidators: true }

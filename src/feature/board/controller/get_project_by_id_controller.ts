@@ -1,13 +1,13 @@
 import { Elysia, t } from "elysia";
 import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
-import { ProjectRepository } from "../domain/repository/project_repository";
+import { BoardRepository } from "../domain/repository/board_repository";
 
 export const GetProjectByIdController = new Elysia().use(DIContainerPlugin).get(
   "/getProject/:id",
   async ({ params, container }) => {
     const { id } = params;
-    const projectRepository = container.get(ProjectRepository);
-    const project = await projectRepository.getProjectById(id);
+    const projectRepository = container.get(BoardRepository);
+    const project = await projectRepository.getBoard(id);
     return project;
   },
   {

@@ -1,15 +1,14 @@
 import { Types } from "mongoose";
 import { User } from "../../../user/domain/entity/user_entity";
-import { ProjectPrivacy } from "./project_privacy_enum";
+import { ProjectPrivacy } from "./board_privacy";
 
-export interface Project {
+export interface Board {
   _id: string;
   name: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
   owner: User;
-  members: Types.ObjectId[] | User[];
+  users: Types.ObjectId[] | User[];
   privacy: ProjectPrivacy;
-  __v?: number;
 }

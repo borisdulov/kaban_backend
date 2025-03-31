@@ -1,10 +1,10 @@
 import { Elysia, t } from "elysia";
-import { ProjectRepository } from "../domain/repository/project_repository";
+import { BoardRepository } from "../domain/repository/board_repository";
 import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
 import { UpdateProjectValidation } from "../dto/request/update_project_dto";
 import { ProjectResponseValidation } from "../dto/response/project_response";
 
-//export const UpdateProjectController = new Elysia().use(DIContainerPlugin).post(
+// export const UpdateProjectController = new Elysia().use(DIContainerPlugin).post(
 //  "/update/:projectId",
 //  async ({ container, body, project}) => {
 //    const projectRepository = container.get(ProjectRepository);
@@ -18,4 +18,4 @@ import { ProjectResponseValidation } from "../dto/response/project_response";
 //      description: "Обновление данных пользователя самим пользователем",
 //    },
 //  }
-//);
+// );
