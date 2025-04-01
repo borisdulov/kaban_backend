@@ -1,8 +1,9 @@
 import { Schema, model } from "mongoose";
 import { User } from "../../domain/entity/user_entity";
-//
+
 const UserSchema = new Schema<User>({
-  name: { type: String, required: true },
+  _id: { type: String, required: true },
+  name: { type: String, required: false },
   email: { type: String, unique: true },
   login: { type: String, unique: true },
   username: { type: String, unique: true },

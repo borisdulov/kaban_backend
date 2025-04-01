@@ -1,3 +1,6 @@
-abstract class SchemaTitle {
-  static board = "Board";
-}
+export const SchemaTitle = {
+  user: "User",
+  board: "Board",
+  column: "Column",
+  task: "Task",
+};

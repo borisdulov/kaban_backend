@@ -7,4 +7,6 @@ export enum AppError {
   FORBIDDEN = "FORBIDDEN",
   PROJECT_NOT_FOUND = "Project not found",
   USER_NOT_FOUND = "User not found",
+  COLUMN_NOT_FOUND = "Column not found",
+  BOARD_NOT_FOUND = "Board not found",
 }

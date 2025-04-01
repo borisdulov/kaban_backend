@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 import { Board } from "../../domain/entity/board_entity";
 import { BoardRepository as BoardRepository } from "../../domain/repository/board_repository";
-import { CreateProjectDTO } from "../../dto/request/create_project_dto";
-import { UpdateProjectDTO } from "../../dto/request/update_project_dto";
-import { BoardModel } from "../model/board_schema";
+import { CreateBoardDTO } from "../../dto/create_board_dto";
+import { BoardModel } from "../model/board_model";
 import { AppError } from "../../../../core/error/app_error";
 import { UserModel } from "../../../user/data/model/user_model";
+import { UpdateBoardDTO } from "../../dto/update_board_dto";
 
 export class BoardRepositoryImpl extends BoardRepository {
-  deleteBoard(boardId: string): Promise<Board> {
+  async deleteBoard(boardId: string): Promise<Board> {
     throw new Error("Method not implemented.");
   }
 
-  async addUser(userId: string, projectId: string): Promise<Board> {
+  async addUsersToBoard(userId: string, projectId: string): Promise<Board> {
     const project = await BoardModel.findById(projectId);
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
@@ -40,7 +40,7 @@ export class BoardRepositoryImpl extends BoardRepository {
     return updatedProject;
   }
 
-  async getMyBoards(userId: string): Promise<Board[]> {
+  async getBoardsByUserId(userId: string): Promise<Board[]> {
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
@@ -53,7 +53,7 @@ export class BoardRepositoryImpl extends BoardRepository {
     return projects as Board[];
   }
 
-  async removeUser(userId: string, projectId: string): Promise<Board> {
+  async removeUserFromBoard(userId: string, projectId: string): Promise<Board> {
     const project = await BoardModel.findById(projectId);
     if (!project) throw AppError.PROJECT_NOT_FOUND;
 
@@ -82,9 +82,9 @@ export class BoardRepositoryImpl extends BoardRepository {
     return updatedProject;
   }
 
-  async createBoard(data: CreateProjectDTO): Promise<Board> {
+  async createBoard(dto: CreateBoardDTO): Promise<Board> {
     const project = new BoardModel({
-      ...data,
+      ...dto,
       owner: new mongoose.Types.ObjectId(),
     });
     await project.save();
@@ -105,13 +105,10 @@ export class BoardRepositoryImpl extends BoardRepository {
     return project.toObject();
   }
 
-  async updateBoard(
-    projectId: string,
-    updateProjectDTO: UpdateProjectDTO
-  ): Promise<Board> {
+  async updateBoard(dto: UpdateBoardDTO): Promise<Board> {
     const project = await BoardModel.findOneAndUpdate(
-      { _id: projectId },
-      { $set: updateProjectDTO },
+      { _id: dto.boardId },
+      { $set: dto },
       { new: true, runValidators: true }
     ).lean();
 
