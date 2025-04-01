@@ -3,7 +3,6 @@ import { Column } from "../../domain/entity/column_entity";
 import { SchemaTitle } from "../../../../core/constant/schema_title";
 
 const ColumnSchema = new Schema<Column>({
-  _id: { type: String, required: true },
   name: {
     type: String,
     required: true,

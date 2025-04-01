@@ -5,7 +5,6 @@ import { SchemaTitle } from "../../../../core/constant/schema_title";
 
 const BoardSchema = new Schema<Board>(
   {
-    _id: { type: String, required: true },
     name: {
       type: String,
       required: true,
