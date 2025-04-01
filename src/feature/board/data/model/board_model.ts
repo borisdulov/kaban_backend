@@ -1,4 +1,4 @@
-import mongoose, { Schema, SchemaType } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { ProjectPrivacy } from "../../domain/entity/board_privacy";
 import { Board } from "../../domain/entity/board_entity";
 import { SchemaTitle } from "../../../../core/constant/schema_title";
