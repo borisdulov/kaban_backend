@@ -9,4 +9,5 @@ export enum AppError {
   USER_NOT_FOUND = "User not found",
   COLUMN_NOT_FOUND = "Column not found",
   BOARD_NOT_FOUND = "Board not found",
+  TASK_NOT_FOUND = "Task not found",
 }

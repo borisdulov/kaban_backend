@@ -14,13 +14,13 @@ const ColumnSchema = new Schema<Column>({
     ref: SchemaTitle.board,
     required: true,
   },
-  // tasks: [
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: "User",
-  //     required: true,
-  //   },
-  // ],
+  tasks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Task",
+      required: true,
+    },
+  ],
 });
 
 ColumnSchema.pre("save", function (next) {
