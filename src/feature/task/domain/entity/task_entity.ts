@@ -7,11 +7,8 @@ export interface Task {
   _id: String;
   title: String;
   description: String;
-  tagId: String;
   columnId: Types.ObjectId | Column;
-  columnList: Types.ObjectId[] | Column[];
   userIds: Types.ObjectId[] | User[];
-  userList: Types.ObjectId[] | User[];
   isCompleted: Boolean;
   taskPriority: TaskPriority;
   dueDate: Date;

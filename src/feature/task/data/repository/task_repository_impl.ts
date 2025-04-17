@@ -9,28 +9,42 @@ import { TaskModel } from "../model/task_model";
 import { FilterTaskDTO } from "../../dto/filter_task_dto";
 
 export class TaskRepositoryImpl extends TaskRepository {
-  async createTask(dto: CreateTaskDto): Promise<Task> {
-    const task = new TaskModel({ ...dto });
-    await task.save();
-    return task.toObject();
-  }
-  async getTaskById(taskId: string): Promise<Task> {
-    const task = await TaskModel.findById({ taskId }).exec();
+  async giveTaskToUser(userId: string, taskId: string): Promise<Task> {
+    const task = await TaskModel.findById(taskId);
     if (!task) {
       throw AppError.TASK_NOT_FOUND;
     }
-    return task.toObject();
+    await TaskModel.findByIdAndUpdate(
+      task,
+      { $addToSet: { userIds: userId } },
+      { new: true }
+    );
+    return task;
   }
-  async getTasksByColumnId(columnId: string): Promise<Task[]> {
-    const column = await ColumnModel.findById(columnId);
-    if (!column) {
+
+  async createTask(dto: CreateTaskDto): Promise<Task> {
+    const task = new TaskModel({ ...dto, column: dto.columnId });
+    await task.save();
+
+    const updatedColumn = await ColumnModel.findByIdAndUpdate(
+      dto.columnId,
+      { $push: { tasks: task._id } },
+      { new: true }
+    );
+
+    if (!updatedColumn) {
       throw AppError.COLUMN_NOT_FOUND;
     }
-    const tasks = await TaskModel.find({
-      _id: { $in: column.tasks },
-    }).populate("tasks");
 
-    return tasks as Task[];
+    return task.toObject();
+  }
+
+  async getTaskById(taskId: string): Promise<Task> {
+    const task = await TaskModel.findById(taskId).lean();
+    if (!task) {
+      throw AppError.TASK_NOT_FOUND;
+    }
+    return task;
   }
 
   async updateTask(dto: UpdateTaskDto): Promise<Task> {
@@ -91,15 +105,5 @@ export class TaskRepositoryImpl extends TaskRepository {
       throw AppError.TASK_NOT_FOUND;
     }
     return updatedTask;
-  }
-
-  async filterTask(dto: FilterTaskDTO): Promise<Task[]> {
-    const query: Record<string, any> = {};
-    if (dto.columnId) query.columnId = dto.columnId;
-    if (dto.tagId) query.tagId = dto.tagId;
-    if (dto.userIds) query.userIds = { $in: dto.userIds };
-    if (dto.taskPriority) query.taskPriority = dto.taskPriority;
-    if (dto.isCompleted !== undefined) query.isCompleted = dto.isCompleted;
-    return TaskModel.find(query).exec();
   }
 }

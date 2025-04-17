@@ -7,9 +7,8 @@ import { Task } from "../entity/task_entity";
 export abstract class TaskRepository extends Dependency {
   abstract createTask(dto: CreateTaskDto): Promise<Task>;
   abstract getTaskById(taskId: string): Promise<Task>;
-  abstract getTasksByColumnId(columnId: String): Promise<Task[]>;
   abstract updateTask(dto: UpdateTaskDto): Promise<Task>;
   abstract deleteTask(taskId: string): Promise<Task>;
+  abstract giveTaskToUser(userId: string, taskId: string): Promise<Task>;
   abstract moveTaskToColumn(taskId: string, newColumnId: string): Promise<Task>;
-  abstract filterTask(dto: FilterTaskDTO): Promise<Task[]>;
 }

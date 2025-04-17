@@ -7,19 +7,16 @@ const TaskSchema = new Schema<Task>(
   {
     title: { type: String },
     description: { type: String },
-    tagId: { type: String },
     columnId: {
       type: Schema.Types.ObjectId,
       ref: SchemaTitle.column,
       required: true,
     },
-    columnList: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: SchemaTitle.column,
-        required: true,
-      },
-    ],
+    column: {
+      type: Schema.Types.ObjectId,
+      ref: SchemaTitle.column,
+      required: true,
+    },
     userIds: [
       {
         type: Schema.Types.ObjectId,
@@ -27,7 +24,7 @@ const TaskSchema = new Schema<Task>(
         required: true,
       },
     ],
-    userList: [
+    users: [
       {
         type: Schema.Types.ObjectId,
         ref: SchemaTitle.user,

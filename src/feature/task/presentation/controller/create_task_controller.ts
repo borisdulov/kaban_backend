@@ -12,6 +12,7 @@ export const CreateTaskController = new Elysia().use(DIContainerPlugin).post(
   },
   {
     body: t.Object({
+      columnId: t.String(),
       title: t.String(),
       description: t.String(),
       isCompleted: t.Boolean(),

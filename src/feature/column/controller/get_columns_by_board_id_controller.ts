@@ -2,19 +2,19 @@ import { Elysia, t } from "elysia";
 import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
 import { ColumnRepository } from "../domain/repository/column_repository";
 
-export const CreateCategoryController = new Elysia()
+export const GetColumnsByBoardController = new Elysia()
   .use(DIContainerPlugin)
-  .post(
-    "/create",
-    async ({ container, body }) => {
+  .get(
+    "/getByBoard/:board",
+    async ({ container, params }) => {
+      const { board: _id } = params;
       const columnRepo = container.get(ColumnRepository);
-      const createdColumn = await columnRepo.createColumn(body);
-      return createdColumn;
+      const columns = await columnRepo.getColumnsByBoardId(_id);
+      return columns;
     },
     {
-      body: t.Object({
+      params: t.Object({
         board: t.String(),
-        name: t.String(),
       }),
     }
   );

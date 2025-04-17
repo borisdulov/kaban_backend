@@ -5,18 +5,28 @@ import { Column } from "../../domain/entity/column_entity";
 import { ColumnModel } from "../model/column_model";
 import { AppError } from "../../../../core/error/app_error";
 import { BoardModel } from "../../../board/data/model/board_model";
+import { TaskModel } from "../../../task/data/model/task_model";
+import { Task } from "../../../task/domain/entity/task_entity";
+import { Types } from "mongoose";
 
 export class ColumnRepositoryImpl extends ColumnRepository {
   async createColumn(dto: CreateColumnDTO): Promise<Column> {
     // Создаем модель
+    const board = await BoardModel.findById(dto.board);
+    if (!board) {
+      throw AppError.BOARD_NOT_FOUND;
+    }
+
     const column = new ColumnModel({
-      ...dto,
+      name: dto.name,
+      board: new Types.ObjectId(dto.board),
+      tasks: [],
     });
     await column.save();
 
     // Добавляем ссылку в доску
     const updatedBoard = await BoardModel.findByIdAndUpdate(
-      dto.boardId,
+      dto.board,
       { $push: { columns: column._id } },
       { new: true }
     );
@@ -28,9 +38,20 @@ export class ColumnRepositoryImpl extends ColumnRepository {
     return column.toObject();
   }
 
-  async getColumnsByBoardId(boardId: string): Promise<Column[]> {
-    const columns = await ColumnModel.find({ boardId }).lean();
+  async getColumnsByBoardId(board: string): Promise<Column[]> {
+    const boardd = await BoardModel.findById(board);
+    if (!boardd) {
+      throw AppError.BOARD_NOT_FOUND;
+    }
+
+    const objectId = new Types.ObjectId(board);
+    const columns = await ColumnModel.find({ board: objectId }).lean();
     return columns;
+  }
+
+  async getTasksByColumnId(columnId: string): Promise<Task[]> {
+    const tasks = await TaskModel.find({ columnId }).lean();
+    return tasks;
   }
 
   async getColumnById(columnId: string): Promise<Column> {
