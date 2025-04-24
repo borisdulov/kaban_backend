@@ -6,13 +6,16 @@ export const DeleteBoardController = new Elysia().use(DIContainerPlugin).get(
   "/delete/:boardId",
   async ({ container, params }) => {
     const { boardId: id } = params;
-    const projectRepository = container.get(BoardRepository);
-    const deletedProject = await projectRepository.deleteBoard(id);
-    return deletedProject;
+    const boardRepo = container.get(BoardRepository);
+    const deletedBoard = await boardRepo.deleteBoard(id);
+    return deletedBoard;
   },
   {
     params: t.Object({
       boardId: t.String(),
     }),
+    detail: {
+      description: "Удалить доску",
+    },
   }
 );

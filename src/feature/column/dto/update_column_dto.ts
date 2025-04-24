@@ -1,5 +1,5 @@
 export interface UpdateColumnDTO {
   columnId: string;
-  name?: string;
+  title?: string;
   color?: string;
 }

@@ -7,18 +7,18 @@ export const RemoveUserFromBoardController = new Elysia()
   .post(
     "/remove-users",
     async ({ container, body }) => {
-      const { userId, projectId } = body;
-      const projectRepository = container.get(BoardRepository);
-      const updatedProject = await projectRepository.removeUserFromBoard(
-        userId,
-        projectId
-      );
-      return updatedProject;
+      const { userId, boardId } = body;
+      const boardRepo = container.get(BoardRepository);
+      const updatedBoard = await boardRepo.removeUserFromBoard(userId, boardId);
+      return updatedBoard;
     },
     {
       body: t.Object({
         userId: t.String(),
-        projectId: t.String(),
+        boardId: t.String(),
       }),
+      detail: {
+        description: "Удалить пользователя с доски",
+      },
     }
   );

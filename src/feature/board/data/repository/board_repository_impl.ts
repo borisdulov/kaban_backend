@@ -8,36 +8,30 @@ import { UserModel } from "../../../user/data/model/user_model";
 import { UpdateBoardDTO } from "../../dto/update_board_dto";
 
 export class BoardRepositoryImpl extends BoardRepository {
-  async deleteBoard(boardId: string): Promise<Board> {
-    throw new Error("Method not implemented.");
-  }
-
-  async addUsersToBoard(userId: string, projectId: string): Promise<Board> {
-    const project = await BoardModel.findById(projectId);
-    if (!project) throw AppError.PROJECT_NOT_FOUND;
+  async addUsersToBoard(userId: string, boardId: string): Promise<Board> {
+    const board = await BoardModel.findById(boardId);
+    if (!board) throw AppError.PROJECT_NOT_FOUND;
 
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
     await Promise.all([
       BoardModel.findByIdAndUpdate(
-        projectId,
+        boardId,
         { $addToSet: { users: userId } },
         { new: true }
       ).lean(),
       UserModel.findByIdAndUpdate(
         userId,
-        { $addToSet: { projectsIds: projectId } },
+        { $addToSet: { boardsIds: boardId } },
         { new: true }
       ).lean(),
     ]);
-    const updatedProject = await BoardModel.findById(projectId).populate(
-      "members"
-    );
-    if (!updatedProject) {
+    const updateBoard = await BoardModel.findById(boardId).populate("members");
+    if (!updateBoard) {
       throw AppError.PROJECT_NOT_FOUND;
     }
-    return updatedProject;
+    return updateBoard;
   }
 
   async getBoardsByUserId(userId: string): Promise<Board[]> {
@@ -45,7 +39,7 @@ export class BoardRepositoryImpl extends BoardRepository {
     if (!user) throw AppError.USER_NOT_FOUND;
 
     const projects = await BoardModel.find({
-      _id: { $in: user.projectsIds },
+      _id: { $in: user.boardsIds },
     })
       .populate("owner")
       .populate("members");
@@ -53,67 +47,65 @@ export class BoardRepositoryImpl extends BoardRepository {
     return projects as Board[];
   }
 
-  async removeUserFromBoard(userId: string, projectId: string): Promise<Board> {
-    const project = await BoardModel.findById(projectId);
-    if (!project) throw AppError.PROJECT_NOT_FOUND;
+  async removeUserFromBoard(userId: string, boardId: string): Promise<Board> {
+    const board = await BoardModel.findById(boardId);
+    if (!board) throw AppError.PROJECT_NOT_FOUND;
 
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
     await Promise.all([
       BoardModel.findByIdAndUpdate(
-        projectId,
+        boardId,
         { $pull: { users: userId } },
         { new: true }
       ).lean(),
       UserModel.findByIdAndUpdate(
         userId,
-        { $pull: { projectsIds: projectId } },
+        { $pull: { boardsIds: boardId } },
         { new: true }
       ).lean(),
     ]);
 
-    const updatedProject = await BoardModel.findById(projectId).populate(
-      "members"
-    );
-    if (!updatedProject) {
+    const updateBoard = await BoardModel.findById(boardId).populate("members");
+    if (!updateBoard) {
       throw AppError.PROJECT_NOT_FOUND;
     }
-    return updatedProject;
+    return updateBoard;
   }
 
   async createBoard(dto: CreateBoardDTO): Promise<Board> {
-    const project = new BoardModel({
+    const board = new BoardModel({
       ...dto,
       owner: new mongoose.Types.ObjectId(),
     });
-    await project.save();
-    return project.toObject();
+    await board.save();
+    return board.toObject();
   }
 
-  async Project(projectId: string): Promise<Board> {
-    const project = await BoardModel.findByIdAndDelete(projectId).exec();
-    if (!project) throw AppError.PROJECT_NOT_FOUND;
+  async deleteBoard(boardId: string): Promise<Board> {
+    const board = await BoardModel.findByIdAndDelete(boardId).exec();
+    if (!board) throw AppError.PROJECT_NOT_FOUND;
 
-    return project.toObject();
+    return board.toObject();
   }
 
-  async getBoard(projectId: string): Promise<Board> {
-    const project = await BoardModel.findById(projectId).exec();
-    if (!project) throw AppError.PROJECT_NOT_FOUND;
+  async getBoard(boardId: string): Promise<Board> {
+    const board = await BoardModel.findById(boardId).exec();
+    if (!board) throw AppError.PROJECT_NOT_FOUND;
 
-    return project.toObject();
+    return board.toObject();
   }
 
   async updateBoard(dto: UpdateBoardDTO): Promise<Board> {
-    const project = await BoardModel.findOneAndUpdate(
+    const updatedBoard = await BoardModel.findOneAndUpdate(
       { _id: dto.boardId },
       { $set: dto },
       { new: true, runValidators: true }
     ).lean();
 
-    if (!project) throw AppError.PROJECT_NOT_FOUND;
+    if (!updatedBoard) throw AppError.PROJECT_NOT_FOUND;
 
-    return project;
+    return updatedBoard;
   }
 }

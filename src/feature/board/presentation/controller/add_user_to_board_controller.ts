@@ -7,15 +7,18 @@ export const AddUserToBoardController = new Elysia()
   .post(
     "/add-users",
     async ({ container, body }) => {
-      const { userId, projectId } = body;
+      const { userId, boardId } = body;
       const boardRepo = container.get(BoardRepository);
-      const updatedProject = await boardRepo.addUsersToBoard(userId, projectId);
-      return updatedProject;
+      const updatedBoard = await boardRepo.addUsersToBoard(userId, boardId);
+      return updatedBoard;
     },
     {
       body: t.Object({
         userId: t.String(),
-        projectId: t.String(),
+        boardId: t.String(),
       }),
+      detail: {
+        description: "Добавить пользователя к доске",
+      },
     }
   );

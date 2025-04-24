@@ -3,52 +3,47 @@ import { Task } from "../../domain/entity/task_entity";
 import { SchemaTitle } from "../../../../core/constant/schema_title";
 import { TaskPriority } from "../../domain/entity/task_priority_enum";
 
-const TaskSchema = new Schema<Task>(
-  {
-    title: { type: String },
-    description: { type: String },
-    columnId: {
-      type: Schema.Types.ObjectId,
-      ref: SchemaTitle.column,
-      required: true,
-    },
-    column: {
-      type: Schema.Types.ObjectId,
-      ref: SchemaTitle.column,
-      required: true,
-    },
-    userIds: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: SchemaTitle.user,
-        required: true,
-      },
-    ],
-    users: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: SchemaTitle.user,
-        required: true,
-      },
-    ],
-    isCompleted: { type: Boolean },
-    taskPriority: {
-      type: String,
-      enum: Object.values(TaskPriority),
-      default: TaskPriority.None,
-    },
-    dueDate: { type: Date },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date },
+const TaskSchema = new Schema<Task>({
+  title: { type: String },
+  description: { type: String },
+  columnId: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
-
-TaskSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
+  column: {
+    type: Schema.Types.ObjectId,
+    ref: SchemaTitle.column,
+    required: true,
+  },
+  userIds: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  users: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: SchemaTitle.user,
+      required: true,
+    },
+  ],
+  creatorId: {
+    type: String,
+    required: true,
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: SchemaTitle.column,
+    required: true,
+  },
+  isCompleted: { type: Boolean },
+  taskPriority: {
+    type: String,
+    enum: Object.values(TaskPriority),
+    default: TaskPriority.None,
+  },
+  dueDate: { type: Date },
 });
 
 export const TaskModel = mongoose.model(SchemaTitle.task, TaskSchema);

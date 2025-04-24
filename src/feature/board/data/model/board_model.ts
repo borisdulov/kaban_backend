@@ -1,22 +1,27 @@
 import mongoose, { Schema } from "mongoose";
-import { ProjectPrivacy } from "../../domain/entity/board_privacy";
 import { Board } from "../../domain/entity/board_entity";
 import { SchemaTitle } from "../../../../core/constant/schema_title";
 
 const BoardSchema = new Schema<Board>(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
-    description: { type: String },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    ownerId: {
+      type: String,
+      required: true,
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: SchemaTitle.user,
       required: true,
     },
+    usersId: [
+      {
+        type: String,
+      },
+    ],
     users: [
       {
         type: Schema.Types.ObjectId,
@@ -24,11 +29,12 @@ const BoardSchema = new Schema<Board>(
         required: true,
       },
     ],
-    privacy: {
-      type: String,
-      enum: Object.values(ProjectPrivacy),
-      default: ProjectPrivacy.Private,
-    },
+    columnsId: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     columns: [
       {
         type: Schema.Types.ObjectId,
@@ -40,10 +46,5 @@ const BoardSchema = new Schema<Board>(
     timestamps: true,
   }
 );
-
-BoardSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
-});
 
 export const BoardModel = mongoose.model(SchemaTitle.board, BoardSchema);

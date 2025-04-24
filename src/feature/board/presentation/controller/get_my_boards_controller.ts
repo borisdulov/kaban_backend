@@ -5,9 +5,9 @@ import { BoardRepository } from "../../domain/repository/board_repository";
 export const GetMyBoardsController = new Elysia().use(DIContainerPlugin).get(
   "/",
   async ({ container }) => {
-    const projectRepository = container.get(BoardRepository);
-    const projects = await projectRepository.getBoardsByUserId("1");
-    return projects;
+    const boardRepo = container.get(BoardRepository);
+    const board = await boardRepo.getBoardsByUserId("1");
+    return board;
   },
   {
     detail: {

@@ -7,11 +7,13 @@ export interface Task {
   _id: String;
   title: String;
   description: String;
-  columnId: Types.ObjectId | Column;
-  userIds: Types.ObjectId[] | User[];
+  columnId: String;
+  column: Column;
+  userIds: String[];
+  users: User[];
+  creatorId: String;
+  creator: User;
   isCompleted: Boolean;
   taskPriority: TaskPriority;
   dueDate: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }

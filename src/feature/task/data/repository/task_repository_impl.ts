@@ -1,4 +1,3 @@
-import mongoose, { Types } from "mongoose";
 import { AppError } from "../../../../core/error/app_error";
 import { ColumnModel } from "../../../column/data/model/column_model";
 import { Task } from "../../domain/entity/task_entity";
@@ -6,22 +5,8 @@ import { TaskRepository } from "../../domain/repository/task_repository";
 import { CreateTaskDto } from "../../dto/create_task_dto";
 import { UpdateTaskDto } from "../../dto/update_task_dto";
 import { TaskModel } from "../model/task_model";
-import { FilterTaskDTO } from "../../dto/filter_task_dto";
 
 export class TaskRepositoryImpl extends TaskRepository {
-  async giveTaskToUser(userId: string, taskId: string): Promise<Task> {
-    const task = await TaskModel.findById(taskId);
-    if (!task) {
-      throw AppError.TASK_NOT_FOUND;
-    }
-    await TaskModel.findByIdAndUpdate(
-      task,
-      { $addToSet: { userIds: userId } },
-      { new: true }
-    );
-    return task;
-  }
-
   async createTask(dto: CreateTaskDto): Promise<Task> {
     const task = new TaskModel({ ...dto, column: dto.columnId });
     await task.save();

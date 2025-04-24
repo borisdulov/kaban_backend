@@ -6,13 +6,16 @@ export const GetBoardByIdController = new Elysia().use(DIContainerPlugin).get(
   "/:boardId",
   async ({ params, container }) => {
     const { boardId: id } = params;
-    const projectRepository = container.get(BoardRepository);
-    const project = await projectRepository.getBoard(id);
-    return project;
+    const boardRepo = container.get(BoardRepository);
+    const board = await boardRepo.getBoard(id);
+    return board;
   },
   {
     params: t.Object({
       boardId: t.String(),
     }),
+    detail: {
+      description: "Получить доску по айди",
+    },
   }
 );

@@ -9,6 +9,5 @@ export abstract class TaskRepository extends Dependency {
   abstract getTaskById(taskId: string): Promise<Task>;
   abstract updateTask(dto: UpdateTaskDto): Promise<Task>;
   abstract deleteTask(taskId: string): Promise<Task>;
-  abstract giveTaskToUser(userId: string, taskId: string): Promise<Task>;
   abstract moveTaskToColumn(taskId: string, newColumnId: string): Promise<Task>;
 }

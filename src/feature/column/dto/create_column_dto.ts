@@ -1,4 +1,4 @@
 export interface CreateColumnDTO {
-  board: string;
-  name: string;
+  boardId: string;
+  title: string;
 }

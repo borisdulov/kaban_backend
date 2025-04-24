@@ -12,21 +12,21 @@ import { Types } from "mongoose";
 export class ColumnRepositoryImpl extends ColumnRepository {
   async createColumn(dto: CreateColumnDTO): Promise<Column> {
     // Создаем модель
-    const board = await BoardModel.findById(dto.board);
+    const board = await BoardModel.findById(dto.boardId);
     if (!board) {
       throw AppError.BOARD_NOT_FOUND;
     }
 
     const column = new ColumnModel({
-      name: dto.name,
-      board: new Types.ObjectId(dto.board),
+      name: dto.title,
+      board: new Types.ObjectId(dto.boardId),
       tasks: [],
     });
     await column.save();
 
     // Добавляем ссылку в доску
     const updatedBoard = await BoardModel.findByIdAndUpdate(
-      dto.board,
+      dto.boardId,
       { $push: { columns: column._id } },
       { new: true }
     );
