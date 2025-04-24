@@ -5,7 +5,7 @@ import { UserGroup } from "./feature/user/user_group";
 import mongoose from "mongoose";
 import { BoardGroup } from "./feature/board/presentation/route/project_group";
 import { TaskGroup } from "./feature/task/presentation/groupe/task_group";
-import { CategoryGroup } from "./feature/column/presentation/group/category_group";
+import { ColumnGroup } from "./feature/column/presentation/group/column_group";
 
 try {
   await mongoose.connect("mongodb://178.209.127.118:27017/mydb", {});
@@ -22,7 +22,7 @@ const app = new Elysia()
   .use(swagger())
   .use(AuthGroup)
   .use(BoardGroup)
-  .use(CategoryGroup)
+  .use(ColumnGroup)
   .use(TaskGroup)
   .use(UserGroup)
   .listen(3000);
