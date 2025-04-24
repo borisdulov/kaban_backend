@@ -1,11 +1,11 @@
 import { Elysia } from "elysia";
 import { AuthGroup } from "./feature/auth/auth_group";
 import swagger from "@elysiajs/swagger";
-import { CategoryGroup } from "./feature/column/category_group";
-import { TaskGroup } from "./feature/task/task_group";
 import { UserGroup } from "./feature/user/user_group";
 import mongoose from "mongoose";
 import { BoardGroup } from "./feature/board/presentation/route/project_group";
+import { TaskGroup } from "./feature/task/presentation/groupe/task_group";
+import { CategoryGroup } from "./feature/column/presentation/group/category_group";
 
 try {
   await mongoose.connect("mongodb://178.209.127.118:27017/mydb", {});

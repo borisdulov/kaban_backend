@@ -1,20 +1,19 @@
 import { Elysia, t } from "elysia";
-import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
-import { ColumnRepository } from "../domain/repository/column_repository";
-
+import { ColumnRepository } from "../../domain/repository/column_repository";
+import { DIContainerPlugin } from "../../../../core/di/di_container_plugin";
 export const GetColumnsByBoardController = new Elysia()
   .use(DIContainerPlugin)
   .get(
-    "/getByBoard/:board",
+    "/getByBoard/:boardId",
     async ({ container, params }) => {
-      const { board: _id } = params;
+      const { boardId: _id } = params;
       const columnRepo = container.get(ColumnRepository);
       const columns = await columnRepo.getColumnsByBoardId(_id);
       return columns;
     },
     {
       params: t.Object({
-        board: t.String(),
+        boardId: t.String(),
       }),
     }
   );

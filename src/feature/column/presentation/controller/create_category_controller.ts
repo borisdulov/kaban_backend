@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
-import { DIContainerPlugin } from "../../../core/di/di_container_plugin";
-import { ColumnRepository } from "../domain/repository/column_repository";
+import { DIContainerPlugin } from "../../../../core/di/di_container_plugin";
+import { ColumnRepository } from "../../domain/repository/column_repository";
 
 export const CreateCategoryController = new Elysia()
   .use(DIContainerPlugin)

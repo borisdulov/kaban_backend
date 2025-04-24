@@ -4,4 +4,5 @@ import { User } from "../entity/user_entity";
 
 export abstract class UserRepository extends Dependency {
   abstract createUser(data: CreateUserDTO): Promise<User>;
+  abstract findUserByUsername(username: String): Promise<User | null>;
 }

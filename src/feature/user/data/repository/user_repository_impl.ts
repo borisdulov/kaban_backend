@@ -5,8 +5,13 @@ import { CreateUserDTO } from "../../dto/create_user_dto";
 import { UserModel } from "../model/user_model";
 
 export class UserRepositoryImpl extends UserRepository {
+  async findUserByUsername(username: String): Promise<User | null> {
+    const user = await UserModel.findOne({ username });
+
+    return user;
+  }
+
   async createUser(data: CreateUserDTO): Promise<User> {
-    console.log("sadf");
     const user = new UserModel({
       ...data,
     });
