@@ -3,7 +3,6 @@ import { User } from "../../domain/entity/user_entity";
 import { SchemaTitle } from "../../../../core/constant/schema_title";
 
 const UserSchema = new Schema<User>({
-  _id: { type: String, required: true },
   password: { type: String },
   username: { type: String, unique: true },
   boardsIds: [{ type: String }],
