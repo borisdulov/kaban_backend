@@ -18,8 +18,8 @@ export class ColumnRepositoryImpl extends ColumnRepository {
     }
 
     const column = new ColumnModel({
-      name: dto.title,
-      board: new Types.ObjectId(dto.boardId),
+      title: dto.title,
+      boardId: new Types.ObjectId(dto.boardId),
       tasks: [],
     });
     await column.save();

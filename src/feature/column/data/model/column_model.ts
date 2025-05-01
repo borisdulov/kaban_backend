@@ -9,7 +9,6 @@ const ColumnSchema = new Schema<Column>({
   },
   color: {
     type: String,
-    required: true,
   },
   boardId: {
     type: String,
@@ -18,7 +17,6 @@ const ColumnSchema = new Schema<Column>({
   board: {
     type: Schema.Types.ObjectId,
     ref: SchemaTitle.board,
-    required: true,
   },
   tasksId: [
     {
