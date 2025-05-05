@@ -35,7 +35,7 @@ const TaskSchema = new Schema<Task>({
   creator: {
     type: Schema.Types.ObjectId,
     ref: SchemaTitle.column,
-    required: true,
+    required: false,
   },
   isCompleted: { type: Boolean },
   taskPriority: {

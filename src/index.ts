@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { BoardGroup } from "./feature/board/presentation/route/project_group";
 import { TaskGroup } from "./feature/task/presentation/groupe/task_group";
 import { ColumnGroup } from "./feature/column/presentation/group/column_group";
+import { cors } from '@elysiajs/cors'
 
 try {
   await mongoose.connect("mongodb://178.209.127.118:27017/mydb", {});
@@ -25,6 +26,10 @@ const app = new Elysia()
   .use(ColumnGroup)
   .use(TaskGroup)
   .use(UserGroup)
+  .use(cors({
+    origin: "*",
+    credentials: true,
+  }))
   .listen(3000);
 
 console.log(
