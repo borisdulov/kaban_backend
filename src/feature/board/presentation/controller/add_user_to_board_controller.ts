@@ -5,7 +5,7 @@ import { BoardRepository } from "../../domain/repository/board_repository";
 export const AddUserToBoardController = new Elysia()
   .use(DIContainerPlugin)
   .post(
-    "/add-users",
+    "/addUser",
     async ({ container, body }) => {
       const { userId, boardId } = body;
       const boardRepo = container.get(BoardRepository);

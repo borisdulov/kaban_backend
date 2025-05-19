@@ -15,10 +15,12 @@ export class BoardRepositoryImpl extends BoardRepository {
     const user = await UserModel.findById(userId);
     if (!user) throw AppError.USER_NOT_FOUND;
 
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+
     await Promise.all([
       BoardModel.findByIdAndUpdate(
         boardId,
-        { $addToSet: { users: userId } },
+        { $addToSet: { users: userIdObj, usersId: userId } },
         { new: true }
       ).lean(),
       UserModel.findByIdAndUpdate(
@@ -27,7 +29,7 @@ export class BoardRepositoryImpl extends BoardRepository {
         { new: true }
       ).lean(),
     ]);
-    const updateBoard = await BoardModel.findById(boardId).populate("members");
+    const updateBoard = await BoardModel.findById(boardId).populate("users");
     if (!updateBoard) {
       throw AppError.PROJECT_NOT_FOUND;
     }
@@ -67,7 +69,7 @@ export class BoardRepositoryImpl extends BoardRepository {
       ).lean(),
     ]);
 
-    const updateBoard = await BoardModel.findById(boardId).populate("members");
+    const updateBoard = await BoardModel.findById(boardId).populate("users");
     if (!updateBoard) {
       throw AppError.PROJECT_NOT_FOUND;
     }
@@ -91,7 +93,10 @@ export class BoardRepositoryImpl extends BoardRepository {
   }
 
   async getBoard(boardId: string): Promise<Board> {
-    const board = await BoardModel.findById(boardId).exec();
+    const board = await BoardModel.findById(boardId).populate([
+      "columns",
+      "users",
+    ]);
     if (!board) throw AppError.PROJECT_NOT_FOUND;
 
     return board.toObject();
