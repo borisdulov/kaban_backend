@@ -8,7 +8,11 @@ import { TaskModel } from "../model/task_model";
 
 export class TaskRepositoryImpl extends TaskRepository {
   async createTask(dto: CreateTaskDto): Promise<Task> {
-    const task = new TaskModel({ ...dto, column: dto.columnId, creatorId: "1"});
+    const task = new TaskModel({
+      ...dto,
+      column: dto.columnId,
+      creatorId: "1",
+    });
     await task.save();
 
     const updatedColumn = await ColumnModel.findByIdAndUpdate(
@@ -85,7 +89,7 @@ export class TaskRepositoryImpl extends TaskRepository {
         { new: true }
       ).lean(),
     ]);
-    const updatedTask = await TaskModel.findById(taskId);
+    const updatedTask = await TaskModel.findById(taskId).populate("column");
     if (!updatedTask) {
       throw AppError.TASK_NOT_FOUND;
     }

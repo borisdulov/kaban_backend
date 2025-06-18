@@ -16,7 +16,7 @@ export const UpdateBoardController = new Elysia().use(DIContainerPlugin).post(
     }),
 
     detail: {
-      description: "Обновление данных пользователя самим пользователем",
+      description: "Обновление данных доски",
     },
   }
 );

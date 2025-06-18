@@ -4,6 +4,7 @@ import { DeleteColumnController } from "../controller/delete_column_controller";
 import { GetColumnController } from "../controller/get_column_controller";
 import { GetColumnTasks } from "../controller/get_column_tasks_controller";
 import { UpdateColumnController } from "../controller/update_column_controller";
+import { GetColumnsByBoardController } from "../controller/get_columns_by_board_id";
 
 export const ColumnGroup = new Elysia().group("/column", (app) =>
   app
@@ -12,4 +13,5 @@ export const ColumnGroup = new Elysia().group("/column", (app) =>
     .use(GetColumnController)
     .use(GetColumnTasks)
     .use(UpdateColumnController)
+    .use(GetColumnsByBoardController)
 );

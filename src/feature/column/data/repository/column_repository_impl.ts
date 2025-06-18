@@ -11,7 +11,6 @@ import { Types } from "mongoose";
 
 export class ColumnRepositoryImpl extends ColumnRepository {
   async createColumn(dto: CreateColumnDTO): Promise<Column> {
-    // Создаем модель
     const board = await BoardModel.findById(dto.boardId);
     if (!board) {
       throw AppError.BOARD_NOT_FOUND;
@@ -24,7 +23,6 @@ export class ColumnRepositoryImpl extends ColumnRepository {
     });
     await column.save();
 
-    // Добавляем ссылку в доску
     const updatedBoard = await BoardModel.findByIdAndUpdate(
       dto.boardId,
       { $push: { columns: column._id } },
@@ -39,14 +37,11 @@ export class ColumnRepositoryImpl extends ColumnRepository {
   }
 
   async getColumnsByBoardId(board: string): Promise<Column[]> {
-    const boardd = await BoardModel.findById(board);
+    const boardd = await BoardModel.findById(board).populate("columns").lean();
     if (!boardd) {
       throw AppError.BOARD_NOT_FOUND;
     }
-
-    const objectId = new Types.ObjectId(board);
-    const columns = await ColumnModel.find({ board: objectId }).lean();
-    return columns;
+    return boardd.columns;
   }
 
   async getTasksByColumnId(columnId: string): Promise<Task[]> {
