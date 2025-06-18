@@ -8,7 +8,7 @@ export const CreateBoardController = new Elysia().use(DIContainerPlugin).post(
     const boardRepo = container.get(BoardRepository);
     const createdProject = await boardRepo.createBoard({
       ...body,
-      ownerId: "1",
+      ownerId: "60e5f2a2b4d1c926f8e0a3c1",
     });
     return createdProject;
   },

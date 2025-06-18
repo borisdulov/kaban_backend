@@ -105,7 +105,7 @@ export class BoardRepositoryImpl extends BoardRepository {
 
   async updateBoard(dto: UpdateBoardDTO): Promise<Board> {
     const updatedBoard = await BoardModel.findOneAndUpdate(
-      { _id: dto.boardId },
+      { boardId: dto.boardId },
       { $set: dto },
       { new: true, runValidators: true }
     ).lean();
