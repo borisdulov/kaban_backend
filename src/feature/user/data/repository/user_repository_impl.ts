@@ -4,7 +4,6 @@ import { CreateUserDTO } from "../../dto/create_user_dto";
 import { UserModel } from "../model/user_model";
 import { UpdateUserDTO } from "../../dto/update_user_dto";
 import { AppError } from "../../../../core/error/app_error";
-import { Console } from "console";
 
 export class UserRepositoryImpl extends UserRepository {
   async deleteUser(id: String): Promise<User> {
@@ -13,11 +12,9 @@ export class UserRepositoryImpl extends UserRepository {
     return user;
   }
   async getUser(id: String): Promise<User> {
-    console.log("vev");
 
     const user = await UserModel.findById(id).populate("boards");
     if (!user) {
-      console.log("vev");
 
       throw AppError.USER_NOT_FOUND;
     }

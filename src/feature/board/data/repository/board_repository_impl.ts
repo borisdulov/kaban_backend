@@ -44,8 +44,6 @@ export class BoardRepositoryImpl extends BoardRepository {
       ownerId: userId,
     }).populate("columns");
 
-    console.log(boards);
-
     return boards as Board[];
   }
 

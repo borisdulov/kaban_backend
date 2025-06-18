@@ -8,10 +8,10 @@ export class DIContainer {
     impl: T
   ): void {
     if (!(impl instanceof Dependency))
-      throw `❌ Не удалось зарегистировать зависимость:  ${as.name} `;
+      throw `Не удалось зарегистировать зависимость:  ${as.name} `;
 
     console.info(
-      `🔧 Регистрация зависимости ${as.name} [${impl.constructor.name}]`
+      `Регистрация зависимости ${as.name} [${impl.constructor.name}]`
     );
     this.deps.set(as.name, impl);
   }
