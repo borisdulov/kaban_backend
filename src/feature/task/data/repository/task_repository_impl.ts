@@ -8,7 +8,7 @@ import { TaskModel } from "../model/task_model";
 
 export class TaskRepositoryImpl extends TaskRepository {
   async createTask(dto: CreateTaskDto): Promise<Task> {
-    const task = new TaskModel({ ...dto, column: dto.columnId, creatorId: "1"});
+    const task = new TaskModel({ ...dto, column: dto.columnId, creatorId: "60e5f2a2b4d1c926f8e0a3c1" });
     await task.save();
 
     const updatedColumn = await ColumnModel.findByIdAndUpdate(

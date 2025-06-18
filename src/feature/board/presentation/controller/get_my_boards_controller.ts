@@ -6,7 +6,7 @@ export const GetMyBoardsController = new Elysia().use(DIContainerPlugin).get(
   "/",
   async ({ container }) => {
     const boardRepo = container.get(BoardRepository);
-    const board = await boardRepo.getBoardsByUserId("1");
+    const board = await boardRepo.getBoardsByUserId("60e5f2a2b4d1c926f8e0a3c1");
     return board;
   },
   {

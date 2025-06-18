@@ -9,7 +9,7 @@ import { ColumnGroup } from "./feature/column/presentation/group/column_group";
 import { cors } from '@elysiajs/cors'
 
 try {
-  await mongoose.connect("mongodb://178.209.127.118:27017/mydb", {});
+  await mongoose.connect("mongodb://82.202.128.109:27017/mydb", {});
   console.log("MongoDB connected");
 } catch (error) {
   console.error("MongoDB connection error:", error);

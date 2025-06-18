@@ -37,16 +37,16 @@ export class BoardRepositoryImpl extends BoardRepository {
   }
 
   async getBoardsByUserId(userId: string): Promise<Board[]> {
-    const user = await UserModel.findById(userId);
-    if (!user) throw AppError.USER_NOT_FOUND;
+    // const user = await UserModel.findById(userId);
+    // if (!user) throw AppError.USER_NOT_FOUND;
 
-    const projects = await BoardModel.find({
-      _id: { $in: user.boardsIds },
-    })
-      .populate("owner")
-      .populate("members");
+    const boards = await BoardModel.find({
+      ownerId: userId,
+    }).populate("columns");
 
-    return projects as Board[];
+    console.log(boards);
+
+    return boards as Board[];
   }
 
   async removeUserFromBoard(userId: string, boardId: string): Promise<Board> {
